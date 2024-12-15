@@ -2,7 +2,7 @@
 
 {% block content %}
 {% for instance in object_list %}
-     <p>{{ instance.medicine_id }} - <a href="{{ instance.get_absolute_url }}">{{ instance.name }}</a></p>
+     <p><a href="{{ instance.get_absolute_url }}">{{ instance.pk }}</a> - {{ instance.name }}</p>
 {% endfor %}
 
 {% endblock %}
