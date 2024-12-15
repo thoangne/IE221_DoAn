@@ -16,7 +16,7 @@ class MedicineForm(forms.ModelForm):
       'strength': forms.TextInput(attrs={"placeholder": "Nhập khối lượng thuốc"}),
       'quantity_in_stock': forms.NumberInput(attrs={"placeholder": "Nhập lượng hàng tồn"}),
       'price': forms.NumberInput(attrs={"placeholder": "Nhập giá"}),
-      'expiry_date': forms.DateInput(format='%d/%m/%Y',attrs={'placeholder': 'Nhập ngày hết hạn (DD/MM/YYYY)'}),
+      'expiry_date': forms.DateInput(format='%d/%m/%Y',attrs={'type': 'date','placeholder': 'Nhập ngày hết hạn (DD/MM/YYYY)'}),
       'supplier_id': forms.TextInput(attrs={"placeholder": "Nhập mã nhà cung cấp"}),
     }
     labels = {
@@ -76,7 +76,7 @@ class CustomerForm(forms.ModelForm):
       'customer_id':forms.TextInput(attrs={"placeholder": "Nhập mã khách hàng"}),
       'name': forms.TextInput(attrs={"placeholder": "Nhập tên khách hàng"}),
       'contact_number': forms.TextInput( attrs={"placeholder": "Nhập số điện thoại liên hệ"}),
-      'date_of_birth': forms.DateInput(format='%d/%m/%Y',attrs={'placeholder': 'Nhập ngày sinh khách hàng (DD/MM/YYYY)'})
+      'date_of_birth': forms.DateInput(format='%d/%m/%Y',attrs={'type': 'date','placeholder': 'Nhập ngày sinh khách hàng (DD/MM/YYYY)'})
     }
     labels = {
       'customer_id': 'Mã khách hàng',
@@ -98,9 +98,9 @@ class EmployeeForm(forms.ModelForm):
       'name': forms.TextInput(attrs={"placeholder": "Nhập tên nhân viên"}),
       'position': forms.TextInput( attrs={"placeholder": "Nhập vị trí"}),
       'contact_number': forms.TextInput(attrs={"placeholder": "Nhập số điện thoại liên hệ"}),
-      'hire_date': forms.DateInput(format='%d/%m/%Y',attrs={'placeholder': 'Nhập ngày vào làm (DD/MM/YYYY)'}),
+      'hire_date': forms.DateInput(format='%d/%m/%Y',attrs={'type': 'date','placeholder': 'Nhập ngày vào làm (DD/MM/YYYY)'}),
       'salary': forms.NumberInput(attrs={"placeholder": "Nhập lương theo tháng"}),
-      'date_of_birth': forms.DateInput(format='%d/%m/%Y',attrs={'placeholder': 'Nhập ngày sinh nhân viên (DD/MM/YYYY)'})
+      'date_of_birth': forms.DateInput(format='%d/%m/%Y',attrs={'type': 'date','placeholder': 'Nhập ngày sinh nhân viên (DD/MM/YYYY)'})
     }
     labels = {
       'employee_id': 'Mã nhân viên',
@@ -124,7 +124,7 @@ class SaleForm(forms.ModelForm):
       'medicine_id': forms.TextInput(attrs={"placeholder": "Nhập mã thuốc"}),
       'customer_id': forms.TextInput( attrs={"placeholder": "Nhập mã khách hàng"}),
       'quantity_sold': forms.NumberInput(attrs={"placeholder": "Nhập số lượng mua"}),
-      'sale_date': forms.DateInput(format='%d/%m/%Y',attrs={'placeholder': 'Nhập ngày mua thuốc (DD/MM/YYYY)'}),
+      'sale_date': forms.DateInput(format='%d/%m/%Y',attrs={'type': 'date','placeholder': 'Nhập ngày mua thuốc (DD/MM/YYYY)'}),
       'total': forms.NumberInput(attrs={'readonly': 'readonly'}),
     }
     labels = {
