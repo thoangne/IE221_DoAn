@@ -36,7 +36,7 @@ class Medicine(models.Model):
 
   def reduce_stock(self, quantity):
     if self.quantity_in_stock < quantity:
-        raise ValueError("Not enough stock available")
+        raise ValueError("Không đủ thuốc có sẵn")
     self.quantity_in_stock -= quantity
     self.save()
 

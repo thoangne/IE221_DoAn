@@ -3,7 +3,7 @@
 {% block content %}
 <form action='' method='POST'>{% csrf_token %}
   {{ form.as_p }}
-  <input type='submit' value='Update' />
+  <button type="submit" name="save">Cập nhật</button>
 </form>
 
 {% endblock %}

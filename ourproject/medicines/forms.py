@@ -1,6 +1,52 @@
 from django import forms
 from .models import *
 
+
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
+
+class RegisterForm(UserCreationForm):
+  email = forms.EmailField()
+
+  class Meta:
+    model = User
+    fields = ["username", "email", "password1", "password2"]
+
+    labels = {
+      "username": "Tên đăng nhập",
+      "email": "Địa chỉ email",
+      "password1": "Mật khẩu",
+      "password2": "Xác nhận mật khẩu",
+    }
+    help_texts = {
+      "username": "Tên đăng nhập chỉ có thể chứa chữ cái, số và ký tự @/./+/-/_",
+      "email": "Vui lòng nhập địa chỉ email hợp lệ.",
+      "password1": "Mật khẩu phải có ít nhất 8 ký tự, bao gồm cả số và chữ cái.",
+      "password2": "Nhập lại mật khẩu để xác nhận.",
+    }
+  def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Gỡ bỏ help_texts mặc định
+        for field_name in ['password1', 'password2']:
+            self.fields[field_name].label = self.Meta.labels.get(field_name, "")
+            self.fields[field_name].help_text = self.Meta.help_texts.get(field_name, "")            
+
+class LoginForm(AuthenticationForm):
+  class Meta:
+    model = User
+    fields = ['username', 'password']
+    labels = {
+      "username": "Tên đăng nhập",
+      "password": "Mật khẩu",
+    }
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    for field_name in ['username', 'password']:
+        self.fields[field_name].label = self.Meta.labels.get(field_name, "")
+    self.fields['password'].widget = forms.PasswordInput()
+
 class MedicineForm(forms.ModelForm):
   class Meta:
     model = Medicine

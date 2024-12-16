@@ -2,10 +2,42 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from .forms import *
 from .models import *
+from django.contrib.auth import authenticate, login, logout
 from django.forms import DateField
 from django.urls import reverse
 
 # Create your views here.
+class LoginView:
+# Create your views here.
+  def register_view(response):
+    if response.method =="POST":
+      form =  RegisterForm(response.POST)
+      if form.is_valid():
+        form.save()
+        return redirect("/login")
+
+    else:
+      form =  RegisterForm()
+    print(form)
+    return render(response, "register.html", {"form":form})
+
+  def login_view(request):
+    if request.method == 'POST':
+      form = LoginForm(request.POST)
+      if form.is_valid():
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+          login(request, user)
+          return redirect('home')
+    else:
+      form = LoginForm()
+    return render(request, 'login.html', {'form': form})
+
+  def logout_view(response):
+    logout(response)
+    return redirect("login")
 class MedicineView:
   def show_medicine(request):
     return render(request, 'show_medicine.html',{'object_list':Medicine.objects.all()})

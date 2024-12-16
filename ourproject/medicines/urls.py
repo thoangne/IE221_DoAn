@@ -11,6 +11,10 @@ app_name = 'medicines'
 
 urlpatterns = [
   # path(''),
+
+  path('register/', LoginView.register_view, name='register'),
+  path('login/', LoginView.login_view, name='login'),
+  path('logout/', LoginView.logout_view, name='logout'),
   path('medicine/', MedicineView.show_medicine, name='show-medicine'),
   path('medicine/add/', MedicineView.add_medicine, name='add-medicine'),
   path('medicine/<str:key_id>/', MedicineView.show_detail, name='show-detail-medicine'),
