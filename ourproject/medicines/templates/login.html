@@ -12,6 +12,14 @@
   {{form.as_p}}
     <p>Bạn không có tài khoản? Tạo tài khoản <a href="{% url 'medicines:register' %}">tại đây</a></p>
   <button type="submit" class="btn btn-success">Đăng nhập</button>
-
 </form>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
 {% endblock %}

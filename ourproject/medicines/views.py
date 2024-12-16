@@ -2,19 +2,128 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from .forms import *
 from .models import *
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.forms import DateField
 from django.urls import reverse
+from django.http import HttpResponse
+from django.contrib.auth.decorators import user_passes_test
 
-# Create your views here.
+# def is_admin(user):
+#     return user.is_superuser
+
+# def is_registered_user(user):
+#     return not user.is_superuser and not user.is_staff
+
+# # Create your views here.
+# class HomeView:
+#   # @user_passes_test(is_admin)
+#   # def home_view_admin(request):
+#   #   return render(request, 'home_admin.html')
+#   # @user_passes_test(is_registered_user)
+#   # def home_view_user(request):
+#   #   return render(request, 'home_user.html')
+#   def home_view(request):
+#     message = ''
+#     if request.user.is_superuser:
+#       message = 'Chào Admin! Đây là nội dung dành riêng cho bạn.'
+#     else:
+#       message = f'Chào {request.user.username}! Đây là nội dung dành riêng cho bạn.'
+#     return render(request, 'home.html',{'message':message})
+
+# class LoginView:
+# # Create your views here.
+#   def register_view(response):
+#     if response.method =="POST":
+#       form =  RegisterForm(response.POST)
+#       if form.is_valid():
+#         # form.save()
+
+#         user = form.save(commit=False)  # Chưa lưu vào database
+#         user.is_superuser = False       # Không phải admin
+#         user.is_staff = False           # Không có quyền staff
+#         user.save()
+#         return redirect("/login")
+
+#     else:
+#       form =  RegisterForm()
+#     print(form)
+#     return render(response, "register.html", {"form":form})
+
+#   def login_view(request):
+#     if request.method == 'POST':
+#       form = LoginForm(request.POST)
+#       if form.is_valid():
+#         username = form.cleaned_data['username']
+#         password = form.cleaned_data['password']
+        
+#         user = authenticate(request, username=username, password=password)
+          
+#         if user is not None:
+#           login(request, user)
+#           messages.success(request, "Đăng nhập thành công.")
+#           if user.is_superuser:
+#             return redirect('/admin')  # Chuyển hướng sau khi đăng nhập thành công
+#           else:
+#             return redirect('/user')
+#         else:
+#           messages.error(request, "Tài khoản hoặc mật khẩu không chính xác.")  # Thông báo khi đăng nhập thất bại
+#       else:
+#           messages.error(request, "Vui lòng kiểm tra lại thông tin đăng nhập.")  # Khi form không hợp lệ
+#     else:
+#       form = LoginForm()
+    
+#     return render(request, 'login.html', {'form': form})
+
+#   def logout_view(response):
+#     logout(response)
+#     return redirect("/login")
+# class UserView:
+#   def view_profile(request):
+#     return render(request, 'profile.html', {'user': request.user})
+#   def edit_profile(request):
+#     if request.method == 'POST':
+#       form = ProfilePasswordChangeForm(request.POST, user=request.user)
+#       if form.is_valid():
+#           form.save()
+#           messages.success(request, "Thông tin của bạn đã được cập nhật thành công.")
+#           return redirect('../')
+#     else:
+#       form = ProfilePasswordChangeForm(user=request.user)
+
+#     return render(request, 'edit_profile.html', {'form': form})
+#   @user_passes_test(is_admin)
+#   def user_list(request):
+#     users = User.objects.all()  # Lấy toàn bộ User từ database
+#     return render(request, 'user_list.html', {'users': users})
+#   @user_passes_test(is_admin)
+#   def delete_user(request, pk):
+#     user = get_object_or_404(User, pk=pk)
+#     if request.method == "POST":
+#         if user.is_superuser:
+#             messages.error(request, "Không thể xóa tài khoản admin.")
+#             return redirect('../')
+#         user.delete()
+#         messages.success(request, 'Tài khoản đã được xóa thành công.')
+#         return redirect('/../users')
+#     return render(request, 'confirm_delete_user.html', {'user': user})
+
+
+#////////////////////////
 class LoginView:
 # Create your views here.
   def register_view(response):
     if response.method =="POST":
       form =  RegisterForm(response.POST)
       if form.is_valid():
-        form.save()
-        return redirect("/login")
+        # form.save()
+
+        user = form.save(commit=False)  # Chưa lưu vào database
+        user.is_superuser = False       # Không phải admin
+        user.is_staff = False           # Không có quyền staff
+        user.save()
+        return redirect("/manage/login")
 
     else:
       form =  RegisterForm()
@@ -27,17 +136,63 @@ class LoginView:
       if form.is_valid():
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
+        
         user = authenticate(request, username=username, password=password)
+          
         if user is not None:
           login(request, user)
-          return redirect('home')
+          messages.success(request, "Đăng nhập thành công.")
+          return redirect('/manage/profile')  # Chuyển hướng sau khi đăng nhập thành công
+        else:
+          messages.error(request, "Tài khoản hoặc mật khẩu không chính xác.")  # Thông báo khi đăng nhập thất bại
+      else:
+          messages.error(request, "Vui lòng kiểm tra lại thông tin đăng nhập.")  # Khi form không hợp lệ
     else:
       form = LoginForm()
+    
     return render(request, 'login.html', {'form': form})
 
   def logout_view(response):
     logout(response)
-    return redirect("login")
+    return redirect("/manage/login")
+class UserView:
+  def view_profile(request):
+    return render(request, 'profile.html', {'user': request.user})
+  def edit_profile(request):
+    if request.method == 'POST':
+      form = ProfilePasswordChangeForm(request.POST, user=request.user)
+      if form.is_valid():
+          form.save()
+          messages.success(request, "Thông tin của bạn đã được cập nhật thành công.")
+          return redirect('/manage/profile')
+    else:
+      form = ProfilePasswordChangeForm(user=request.user)
+
+    return render(request, 'edit_profile.html', {'form': form})
+  def user_list(request):
+    users = User.objects.all()  # Lấy toàn bộ User từ database
+    return render(request, 'user_list.html', {'users': users})
+  # def edit_user(request,pk):
+  #   user = get_object_or_404(User, pk=pk)
+  #   if request.method == "POST":
+  #       form = PasswordChangeForm(user, request.POST)
+  #       if form.is_valid():
+  #           form.save()
+  #           messages.success(request, 'Mật khẩu đã được cập nhật thành công.')
+  #           return redirect('user_list')
+  #   else:
+  #       form = PasswordChangeForm(user)
+  #   return render(request, 'edit_user.html', {'form': form, 'user': user})
+  def delete_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == "POST":
+        if user.is_superuser:
+            messages.error(request, "Không thể xóa tài khoản admin.")
+            return redirect('/manage/users')
+        user.delete()
+        messages.success(request, 'Tài khoản đã được xóa thành công.')
+        return redirect('/manage/users')
+    return render(request, 'confirm_delete_user.html', {'user': user})
 class MedicineView:
   def show_medicine(request):
     return render(request, 'show_medicine.html',{'object_list':Medicine.objects.all()})
@@ -312,6 +467,10 @@ class SaleView:
       return redirect('../../')
       # return redirect('/medicine/')
     return render(request, 'delete_medicine.html',{'object':row})
+#/////////////////////////
+
+
+
 
 # class MedicineView:
 #   def show_medicine(request):

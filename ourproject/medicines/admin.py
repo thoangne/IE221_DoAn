@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.http import HttpRequest
-from .models import Medicine
+from .models import *
 # Register your models here.
 # class MedicineAdmin(admin.ModelAdmin):
 #   list_display = ('medicine_id','name','catelogy_id','dosage_form','strength','quantity_in_stock','price','expiry_date')

@@ -1,0 +1,7 @@
+<h1>Chỉnh sửa thông tin cá nhân</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Cập nhật</button>
+</form>
+<a href="{% url 'medicines:view_profile' %}">Quay lại thông tin cá nhân</a>
