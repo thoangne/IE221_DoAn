@@ -16,18 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-# from medicines.views import LoginView
 # from pages.view import home_view
 
 urlpatterns = [
     # path('',home_view, name='home'),
     # path('',include('register.urls')),
-    # path('login/', LoginView.login_view,name='login'),
-
     path('manage/',include('medicines.urls')),
     path('admin/', admin.site.urls),
-
-    # path('admin/', include('medicines.admin_urls')),  # Giao diện admin
-    # path('user/', include('medicines.user_urls')),   # Giao diện người dùng đã đăng ký
-    # path('',include('medicines.login_urls'))
 ]
