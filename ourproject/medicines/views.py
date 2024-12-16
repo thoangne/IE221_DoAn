@@ -37,7 +37,7 @@ class LoginView:
 
   def logout_view(response):
     logout(response)
-    return redirect("login")
+    return redirect("/manage/login")
 class MedicineView:
   def show_medicine(request):
     return render(request, 'show_medicine.html',{'object_list':Medicine.objects.all()})
