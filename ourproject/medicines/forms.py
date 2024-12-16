@@ -5,6 +5,7 @@ from .models import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import AuthenticationForm
 
 class RegisterForm(UserCreationForm):
@@ -33,19 +34,38 @@ class RegisterForm(UserCreationForm):
             self.fields[field_name].label = self.Meta.labels.get(field_name, "")
             self.fields[field_name].help_text = self.Meta.help_texts.get(field_name, "")            
 
-class LoginForm(AuthenticationForm):
-  class Meta:
-    model = User
-    fields = ['username', 'password']
-    labels = {
-      "username": "Tên đăng nhập",
-      "password": "Mật khẩu",
-    }
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    for field_name in ['username', 'password']:
-        self.fields[field_name].label = self.Meta.labels.get(field_name, "")
-    self.fields['password'].widget = forms.PasswordInput()
+# class LoginForm(AuthenticationForm):
+  # class Meta:
+  #   model = User
+  #   fields = ['username', 'password']
+  #   labels = {
+  #     "username": "Tên đăng nhập",
+  #     "password": "Mật khẩu",
+  #   }
+  # def __init__(self, *args, **kwargs):
+  #   super().__init__(*args, **kwargs)
+  #   for field_name in ['username', 'password']:
+  #       self.fields[field_name].label = self.Meta.labels.get(field_name, "")
+  #   self.fields['password'].widget = forms.PasswordInput()
+class LoginForm(forms.Form):
+  username = forms.CharField(max_length=150, required=True, label="Tên đăng nhập")
+  password = forms.CharField(widget=forms.PasswordInput, required=True, label="Mật khẩu")
+
+class ProfilePasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Tùy chỉnh label và help_text
+        self.fields['old_password'].label = "Mật khẩu hiện tại"
+        self.fields['old_password'].help_text = "Vui lòng nhập mật khẩu hiện tại của bạn."
+        
+        self.fields['new_password1'].label = "Mật khẩu mới"
+        self.fields['new_password1'].help_text = (
+            "Mật khẩu mới phải có ít nhất 8 ký tự, không thể là mật khẩu thông dụng hoặc hoàn toàn là số."
+        )
+        
+        self.fields['new_password2'].label = "Xác nhận mật khẩu mới"
+        self.fields['new_password2'].help_text = "Nhập lại mật khẩu mới để xác nhận."
+
 
 class MedicineForm(forms.ModelForm):
   class Meta:
